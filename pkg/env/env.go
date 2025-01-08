@@ -7,6 +7,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/buildwithme/ethparser/pkg/constants"
 )
 
 type EnvVars struct {
@@ -17,7 +19,9 @@ func NewEnvVars() *EnvVars {
 }
 
 // LoadDotEnv parses a .env file and sets environment variables in the process.
-func LoadDotEnv(path string) error {
+func LoadDotEnv() error {
+	path := GetEnvString(constants.ENV_FILE_PATH, ".env")
+
 	log.Printf("Open env filepath: %s", path)
 
 	file, err := os.Open(path)
