@@ -5,12 +5,15 @@ import (
 	"sync"
 
 	"github.com/buildwithme/ethparser/internal/rpcfetch"
+	"github.com/buildwithme/ethparser/pkg/constants"
 	"github.com/buildwithme/ethparser/pkg/env"
 	"github.com/buildwithme/ethparser/pkg/logger"
 	"github.com/buildwithme/ethparser/pkg/storage"
 )
 
 type BlockFetch interface {
+	// Run starts the block fetching process.
+	Run()
 	// GetCurrentBlock returns the highest block we've successfully written to Storage.
 	GetCurrentBlock() int
 	// ProcessRange fetches and processes blocks from `start` to `end`.
@@ -30,9 +33,9 @@ type blockFetcher struct {
 
 // NewFetcher constructs a blockFetcher.
 func NewFetcher(log *logger.Logger, sto storage.Storage, rpcFetcher rpcfetch.Fetcher) BlockFetch {
-	concurrency := env.GetEnvInt("CONCURRENCY", 1)
-	chunkSize := env.GetEnvInt("CHUNK_SIZE", 50)
-	maxRetries := env.GetEnvInt("MAX_RETRIES", 3)
+	concurrency := env.GetEnvInt(constants.ENV_CONCURRENCY, 1)
+	chunkSize := env.GetEnvInt(constants.ENV_CHUNK_SIZE, 50)
+	maxRetries := env.GetEnvInt(constants.ENV_MAX_RETRIES, 3)
 
 	return &blockFetcher{
 		log:         log,

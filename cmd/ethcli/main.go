@@ -1,10 +1,6 @@
 package main
 
 import (
-	"context"
-	"os"
-	"strings"
-
 	"github.com/buildwithme/ethparser/internal/blockfetch"
 	"github.com/buildwithme/ethparser/internal/parser"
 	"github.com/buildwithme/ethparser/internal/rpcfetch"
@@ -16,9 +12,17 @@ import (
 func main() {
 	logger := logger.NewLogger()
 
-	if err := env.LoadDotEnv(".env"); err != nil {
+	// Parse CLI flags & override .env if needed
+	cf := ParseFlags()
+
+	cf.ApplyEnvFile()
+
+	if err := env.LoadDotEnv(); err != nil {
 		logger.Fatalf("[FATAL] .env not loaded: %v", err)
 	}
+
+	// Apply any CLI flag overrides to the environment
+	cf.ApplyConfig()
 
 	storage := storage.NewMemoryStorage()
 	rpcFetcher := rpcfetch.NewFetcher(logger)
@@ -29,41 +33,5 @@ func main() {
 	subscribeEnvAddresses(parser, logger)
 
 	// Fetch blocks
-	fetchBlocks(logger, blockFetcher, rpcFetcher, parser)
-}
-
-// subscribeEnvAddresses pulls addresses from ADDRESSES in .env
-func subscribeEnvAddresses(parser parser.Parser, log *logger.Logger) {
-	addrs := os.Getenv("ADDRESSES")
-	if addrs == "" {
-		return
-	}
-
-	for _, a := range strings.Split(addrs, ",") {
-		a = strings.TrimSpace(a)
-		if a != "" {
-			parser.Subscribe(a)
-			log.Printf("[INFO] Subscribed env address: %s", a)
-		}
-	}
-}
-
-func fetchBlocks(log *logger.Logger, blockFetcher blockfetch.BlockFetch, rpcFetcher rpcfetch.Fetcher, parser parser.Parser) {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	latest, err := rpcFetcher.GetLatestBlock(ctx)
-	if err != nil {
-		log.Fatalf("Cannot fetch latest block: %v", err)
-	}
-
-	startFlag := latest - 10
-	endFlag := latest
-
-	err = blockFetcher.ProcessRange(ctx, startFlag, endFlag)
-	if err != nil {
-		log.Fatalf("ProcessRange error: %v", err)
-	}
-
-	log.Printf("Done. Last processed = %d", parser.GetCurrentBlock())
+	blockFetcher.Run()
 }
