@@ -1,6 +1,15 @@
 APP_NAME_CLI := ethcli
 
-.PHONY: all build run-cli clean
+.PHONY: help all build run-cli clean
+
+help:
+	@echo "Usage:"
+	@echo "  make build         # Build the binary"
+	@echo "  make run           # Run the binary (with .env config)"
+	@echo "  ./bin/$(APP_NAME) --help   # Print CLI usage"
+	@echo
+	@echo "Examples:"
+	@echo "  ./bin/$(APP_NAME) --concurrency 8 --addresses 0x123,0x456"
 
 all: build
 
@@ -15,4 +24,3 @@ run-cli: build
 clean:
 	@echo "===> Cleaning binary"
 	rm -rf bin
-	
