@@ -16,8 +16,8 @@ import (
 func main() {
 	logger := logger.NewLogger()
 
-	if err := env.LoadDotEnv("../../.env"); err != nil {
-		logger.Fatalf("[WARN] .env not loaded: %v", err)
+	if err := env.LoadDotEnv(".env"); err != nil {
+		logger.Fatalf("[FATAL] .env not loaded: %v", err)
 	}
 
 	storage := storage.NewMemoryStorage()

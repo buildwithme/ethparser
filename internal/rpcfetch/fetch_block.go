@@ -94,6 +94,7 @@ func (p *ethFetcher) postRequest(ctx context.Context, payload any) (*http.Respon
 	if err != nil {
 		return nil, err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
