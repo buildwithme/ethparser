@@ -4,3 +4,6 @@
 
 # built binaries
 bin
+
+# Executable files
+*.exe
