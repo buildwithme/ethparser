@@ -1,2 +1,6 @@
+# workspace
 .history
 .vscode
+
+# built binaries
+bin
