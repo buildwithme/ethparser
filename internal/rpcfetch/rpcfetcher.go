@@ -3,6 +3,7 @@ package rpcfetch
 import (
 	"context"
 
+	"github.com/buildwithme/ethparser/pkg/constants"
 	"github.com/buildwithme/ethparser/pkg/env"
 	"github.com/buildwithme/ethparser/pkg/logger"
 )
@@ -41,7 +42,7 @@ type (
 
 // NewFetcher constructs an ethFetcher that fetches blocks from `endpoint`.
 func NewFetcher(log *logger.Logger) Fetcher {
-	endpoint := env.GetEnvString("RPC_ENDPOINT", "https://cloudflare-eth.com")
+	endpoint := env.GetEnvString(constants.ENV_RPC_ENDPOINT, "https://cloudflare-eth.com")
 
 	return &ethFetcher{
 		log:      log,

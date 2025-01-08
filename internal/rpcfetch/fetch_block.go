@@ -10,11 +10,13 @@ import (
 )
 
 const (
-	TRANSACTION_BLOCK = "blockNumber"
-	TRANSACTION_HASH  = "hash"
-	TRANSACTION_FROM  = "from"
-	TRANSACTION_TO    = "to"
-	TRANSACTION_VALUE = "value"
+	TRANSACTION_BLOCK      = "blockNumber"
+	TRANSACTION_HASH       = "hash"
+	TRANSACTION_FROM       = "from"
+	TRANSACTION_TO         = "to"
+	TRANSACTION_VALUE      = "value"
+	JSON_RPC_VERSION       = "2.0"
+	BLOCK_BY_NUMBER_METHOD = "eth_getBlockByNumber"
 )
 
 type (
@@ -36,8 +38,8 @@ type (
 func (p *ethFetcher) FetchBlock(ctx context.Context, blockNum int) (*BlockResult, error) {
 	hexBlock := fmt.Sprintf("0x%X", blockNum)
 	payload := map[string]interface{}{
-		"jsonrpc": "2.0",
-		"method":  "eth_getBlockByNumber",
+		"jsonrpc": JSON_RPC_VERSION,
+		"method":  BLOCK_BY_NUMBER_METHOD,
 		"params":  []interface{}{hexBlock, true},
 		"id":      1,
 	}

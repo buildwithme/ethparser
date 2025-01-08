@@ -5,6 +5,8 @@ import (
 	"strconv"
 )
 
+const BLOCK_NUMBER_METHOD = "eth_blockNumber"
+
 type (
 	RPCRequest struct {
 		JSONRPC string `json:"jsonrpc"`
@@ -21,8 +23,8 @@ type (
 // GetLatestBlock returns the latest block number from the Ethereum node.
 func (p *ethFetcher) GetLatestBlock(ctx context.Context) (int, error) {
 	payload := RPCRequest{
-		JSONRPC: "2.0",
-		Method:  "eth_blockNumber",
+		JSONRPC: JSON_RPC_VERSION,
+		Method:  BLOCK_NUMBER_METHOD,
 		Params:  []interface{}{},
 		ID:      1,
 	}

@@ -28,7 +28,9 @@ func (m *memoryStorage) SubscribeAddress(addr string) bool {
 	if m.subscribed[a] {
 		return false
 	}
+
 	m.subscribed[a] = true
+
 	return true
 }
 
@@ -40,6 +42,7 @@ func (m *memoryStorage) GetSubscribedAddresses() []string {
 	for k := range m.subscribed {
 		addrs = append(addrs, k)
 	}
+
 	return addrs
 }
 
@@ -47,23 +50,24 @@ func (m *memoryStorage) StoreBlockTransactions(blockNum int, txs []Transaction) 
 	m.mu.Lock()
 	defer m.mu.Unlock()
 
-	for _, t := range txs {
-		from := strings.ToLower(t.From)
-		to := strings.ToLower(t.To)
+	for _, tx := range txs {
+		from := strings.ToLower(tx.From)
+		to := strings.ToLower(tx.To)
 		if m.subscribed[from] || m.subscribed[to] {
 			// store in the 'from' address bucket if subscribed
 			if m.subscribed[from] {
-				m.transactions[from] = append(m.transactions[from], t)
+				m.transactions[from] = append(m.transactions[from], tx)
 			}
 
 			// store in the 'to' address bucket if subscribed
 			if m.subscribed[to] {
-				m.transactions[to] = append(m.transactions[to], t)
+				m.transactions[to] = append(m.transactions[to], tx)
 			}
 
-			log.Println(t)
+			log.Println(tx)
 		}
 	}
+
 	return nil
 }
 
