@@ -5,8 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 )
+
+type EnvVars struct {
+}
+
+func NewEnvVars() *EnvVars {
+	return &EnvVars{}
+}
 
 // LoadDotEnv parses a .env file and sets environment variables in the process.
 func LoadDotEnv(path string) error {
@@ -41,4 +49,27 @@ func LoadDotEnv(path string) error {
 	}
 
 	return nil
+}
+
+func GetEnvInt(key string, def int) int {
+	val := os.Getenv(key)
+	if val == "" {
+		return def
+	}
+
+	i, err := strconv.Atoi(val)
+	if err != nil {
+		return def
+	}
+
+	return i
+}
+
+func GetEnvString(key string, def string) string {
+	val := os.Getenv(key)
+	if val == "" {
+		return def
+	}
+
+	return val
 }
