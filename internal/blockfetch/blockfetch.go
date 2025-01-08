@@ -5,10 +5,10 @@ import (
 	"sync"
 
 	"github.com/buildwithme/ethparser/internal/rpcfetch"
+	"github.com/buildwithme/ethparser/internal/storage"
 	"github.com/buildwithme/ethparser/pkg/constants"
 	"github.com/buildwithme/ethparser/pkg/env"
 	"github.com/buildwithme/ethparser/pkg/logger"
-	"github.com/buildwithme/ethparser/pkg/storage"
 )
 
 type BlockFetch interface {

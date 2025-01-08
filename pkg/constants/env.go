@@ -1,6 +1,7 @@
 package constants
 
 const (
+	ENV_PORT                = "PORT"
 	ENV_FILE_PATH           = "ENV_FILE_PATH"
 	ENV_ADDRESSES           = "ADDRESSES"
 	ENV_RPC_ENDPOINT        = "RPC_ENDPOINT"

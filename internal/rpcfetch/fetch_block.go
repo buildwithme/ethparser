@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/big"
 	"net/http"
 	"strconv"
 )
@@ -57,16 +59,29 @@ func (p *ethFetcher) FetchBlock(ctx context.Context, blockNum int) (*BlockResult
 
 	var txs []*BlockTransaction
 	for _, raw := range response.Result.Transactions {
+		txValue := getTrxStringValue(raw, TRANSACTION_VALUE)
+
 		txs = append(txs, &BlockTransaction{
 			BlockNumber: int(getTrxIntValue(raw, TRANSACTION_BLOCK)),
 			Hash:        getTrxStringValue(raw, TRANSACTION_HASH),
 			From:        getTrxStringValue(raw, TRANSACTION_FROM),
 			To:          getTrxStringValue(raw, TRANSACTION_TO),
-			Value:       getTrxStringValue(raw, TRANSACTION_VALUE),
+			Value:       p.getBigIntValue(txValue),
 		})
 	}
 
 	return &BlockResult{BlockNumber: blockNum, Transactions: txs}, nil
+}
+
+func (p *ethFetcher) getBigIntValue(value string) string {
+	bi := new(big.Int)
+	_, ok := bi.SetString(value[2:], 16)
+	if !ok {
+		log.Printf("[ERROR]: Failed to parse %s as hex", value)
+		return ""
+	}
+
+	return bi.String()
 }
 
 // getTrxStringValue returns the string value from the raw transaction data.

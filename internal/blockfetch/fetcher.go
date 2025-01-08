@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/buildwithme/ethparser/internal/rpcfetch"
-	"github.com/buildwithme/ethparser/pkg/storage"
+	"github.com/buildwithme/ethparser/internal/storage"
 )
 
 // GetCurrentBlock returns the highest block we've successfully written to Storage.

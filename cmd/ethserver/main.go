@@ -1,10 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/buildwithme/ethparser/internal/blockfetch"
+	"github.com/buildwithme/ethparser/internal/httphandlers"
 	"github.com/buildwithme/ethparser/internal/parser"
 	"github.com/buildwithme/ethparser/internal/rpcfetch"
 	"github.com/buildwithme/ethparser/internal/storage"
+	"github.com/buildwithme/ethparser/pkg/constants"
 	"github.com/buildwithme/ethparser/pkg/env"
 	"github.com/buildwithme/ethparser/pkg/logger"
 )
@@ -29,9 +34,19 @@ func main() {
 	blockFetcher := blockfetch.NewFetcher(logger, storage, rpcFetcher)
 	parser := parser.NewParser(logger, storage, blockFetcher)
 
-	// Subscribe addresses
-	subscribeEnvAddresses(parser, logger)
-
 	// Fetch blocks
-	blockFetcher.Run()
+	go blockFetcher.Run()
+
+	// Register HTTP handlers
+	handlers := httphandlers.New(parser)
+	handlers.RegisterHandlers()
+
+	endpoint := fmt.Sprintf(":%s", env.GetEnvString(constants.ENV_PORT, "8080"))
+
+	logger.Printf("[INFO]: HTTP server starting on %s", endpoint)
+
+	err := http.ListenAndServe(endpoint, nil)
+	if err != nil && err != http.ErrServerClosed {
+		logger.Fatalf("server error: %v", err)
+	}
 }

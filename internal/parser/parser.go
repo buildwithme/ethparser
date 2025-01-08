@@ -2,8 +2,8 @@ package parser
 
 import (
 	"github.com/buildwithme/ethparser/internal/blockfetch"
+	"github.com/buildwithme/ethparser/internal/storage"
 	"github.com/buildwithme/ethparser/pkg/logger"
-	"github.com/buildwithme/ethparser/pkg/storage"
 )
 
 type Parser interface {

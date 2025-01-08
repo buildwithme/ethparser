@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const BLOCK_SYNC_TIMEOUT = 10 * time.Second
+const BLOCK_SYNC_TIMEOUT = 2 * time.Second
 
 func (p *blockFetcher) Run() {
 	// Create a context we can cancel if needed (for graceful shutdown)

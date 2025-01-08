@@ -78,6 +78,10 @@ func (m *memoryStorage) GetTransactions(addr string) []Transaction {
 	a := strings.ToLower(addr)
 	txs := m.transactions[a]
 
+	if txs == nil {
+		return []Transaction{}
+	}
+
 	// copy the slice
 	return txs[:]
 }
