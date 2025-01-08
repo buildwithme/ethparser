@@ -3,15 +3,18 @@ package env
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 )
 
 // LoadDotEnv parses a .env file and sets environment variables in the process.
 func LoadDotEnv(path string) error {
+	log.Printf("Open env filepath: %s", path)
+
 	file, err := os.Open(path)
 	if err != nil {
-		return err
+		return fmt.Errorf("[error]: Failed to load path: %s", path)
 	}
 	defer file.Close()
 
